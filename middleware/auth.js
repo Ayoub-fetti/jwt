@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const SECRET = "123456789"
+const SECRET = "12345678910"
 
 function authenticateToken(req, res, next) {
 

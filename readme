@@ -1,0 +1,59 @@
+1- npm install jsonwebtoken bcryptjs mysql2
+
+2- structure
+
+workshop/
+|
+│── server.js          
+│── routes/
+│    └── auth.js       
+│── middleware/
+│    └── auth.js       
+│── db.js              
+│── package.json
+.
+
+3- base de donnee (script sql + db.js)
+
+CREATE DATABASE IF NOT EXISTS workshop;
+USE workshop;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+4- middleware/auth.js ( function authenticateToken)
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
+
+5- routes/auth.js
+
+6- configurer server.js 
+
+const express = require('express');
+const authRoutes = require('./routes/auth');
+const authenticateToken = require('./middleware/auth');
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/auth", authRoutes);
+
+app.listen(3000, () => console.log("serveur lancer"));
+
+
+
